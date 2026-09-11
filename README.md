@@ -1,2 +1,2 @@
 # DiamondMenu
-Diamond Menu - Horizon Roleplay
+DiamondMenu - Horizon Roleplay
