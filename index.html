@@ -478,7 +478,7 @@
                 <p><strong>Requirements:</strong> GTA SA 1.0 US, MoonLoader 0.26+, SAMPFUNCS, ImGui, and <code>samp.events</code>.</p>
                 <ol>
                     <li>Click the download button above to download the file.</li>
-                    <li>Extract the ZIP and place <code>DiamondMenu.lua</code> into your <code>GTA San Andreas\moonloader\</code> folder.</li>
+                    <li>Extract the 7z archive and place <code>DiamondMenu.lua</code> into your <code>GTA San Andreas\moonloader\</code> folder.</li>
                     <li>Connect to HZG (<code>samp.hzgaming.net:7777</code>) and type <code>/diamondmenu</code>.</li>
                 </ol>
             </div>
@@ -516,7 +516,7 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded';
 
-            const fileUrl = 'https://raw.githubusercontent.com/Tony-HZG/DiamondMenu/main/DiamondMenu.zip';
+            const fileUrl = 'https://raw.githubusercontent.com/Tony-HZG/DiamondMenu/main/DiamondMenu.7z';
             
             try {
                 const res = await fetch(fileUrl);
@@ -524,7 +524,7 @@
                 const blobUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = blobUrl;
-                a.download = 'DiamondMenu.zip';
+                a.download = 'DiamondMenu.7z';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -533,7 +533,7 @@
                 // Direct browser fallback
                 const a = document.createElement('a');
                 a.href = fileUrl;
-                a.download = 'DiamondMenu.zip';
+                a.download = 'DiamondMenu.7z';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -645,4 +645,4 @@
     </script>
 </body>
 </html>
-        
+    
