@@ -409,7 +409,7 @@
         <section class="hero">
             <h1>Diamond Menu <span>v1.0.0.3</span></h1>
             <p>
-                A clean MoonLoader menu created for Horizon Roleplay.
+                A clean MoonLoader automation menu created for Horizon Roleplay.
             </p>
 
             <!-- Download Button -->
@@ -478,7 +478,7 @@
                 <p><strong>Requirements:</strong> GTA SA 1.0 US, MoonLoader 0.26+, SAMPFUNCS, ImGui, and <code>samp.events</code>.</p>
                 <ol>
                     <li>Click the download button above to download the file.</li>
-                    <li>Place <code>DiamondMenu.lua</code> into your <code>GTA San Andreas\moonloader\</code> folder.</li>
+                    <li>Extract the ZIP and place <code>DiamondMenu.lua</code> into your <code>GTA San Andreas\moonloader\</code> folder.</li>
                     <li>Connect to HZG (<code>samp.hzgaming.net:7777</code>) and type <code>/diamondmenu</code>.</li>
                 </ol>
             </div>
@@ -516,7 +516,7 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded';
 
-            const fileUrl = 'https://raw.githubusercontent.com/Tony-HZG/DiamondMenu/main/DiamondMenu.lua';
+            const fileUrl = 'https://raw.githubusercontent.com/Tony-HZG/DiamondMenu/main/DiamondMenu.zip';
             
             try {
                 const res = await fetch(fileUrl);
@@ -524,16 +524,16 @@
                 const blobUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = blobUrl;
-                a.download = 'DiamondMenu.lua';
+                a.download = 'DiamondMenu.zip';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(blobUrl);
             } catch (e) {
-                // Browser fallback
+                // Direct browser fallback
                 const a = document.createElement('a');
                 a.href = fileUrl;
-                a.download = 'DiamondMenu.lua';
+                a.download = 'DiamondMenu.zip';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -645,3 +645,4 @@
     </script>
 </body>
 </html>
+        
