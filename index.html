@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Menu — Horizon Roleplay</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #04070d;
+            --surface: #0a101c;
+            --card: #0d1524;
+            --border: rgba(0, 200, 255, 0.16);
+            --border-hover: rgba(0, 200, 255, 0.45);
+            --cyan: #00c8ff;
+            --text: #e6edf5;
+            --muted: #8596ac;
+            --green: #00ff88;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* High-Performance Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            transform: translateZ(0);
+        }
+
+        /* Smooth Staggered Load Animations */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav {
+            animation: pageFadeIn 0.6s ease-out both;
+        }
+
+        .hero {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+        }
+
+        .section-features {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .section-install {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+
+        footer {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Navigation */
+        nav {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            background: #050912;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 1.2px;
+        }
+
+        .brand i {
+            color: var(--cyan);
+        }
+
+        /* HZG Badge in Navigation */
+        .hzg-nav-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #190a10;
+            border: 1px solid rgba(255, 60, 100, 0.3);
+            border-radius: 6px;
+            padding: 5px 12px;
+            text-decoration: none;
+            transition: border-color 0.2s;
+        }
+
+        .hzg-nav-badge:hover {
+            border-color: rgba(255, 80, 120, 0.6);
+        }
+
+        .hzg-logo-mini {
+            background: #2b0b14;
+            border: 1px solid #751b32;
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.95rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .hzg-nav-info {
+            font-size: 0.8rem;
+            color: #a8b8cc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 60px 0 40px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        h1 span {
+            color: var(--cyan);
+        }
+
+        .hero p {
+            max-width: 580px;
+            margin: 0 auto 34px auto;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        /* Centered Download Wrapper */
+        .download-wrapper {
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 56px;
+            background: linear-gradient(135deg, #00c8ff, #0077ff);
+            color: #04070d;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 16px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.25s ease, transform 0.15s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+
+        .btn-download:hover:not(:disabled) {
+            background: linear-gradient(135deg, #33d4ff, #1a88ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 200, 255, 0.4);
+        }
+
+        /* Disabled Grey Tab State */
+        .btn-download:disabled {
+            background: #18202c !important;
+            color: #6d7f95 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Section Headings */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 50px 0 18px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--cyan);
+            font-size: 1.05rem;
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .feature-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .feature-item:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .feature-item i {
+            font-size: 1.15rem;
+            color: var(--cyan);
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .feature-item span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Install Box */
+        .install-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 22px 24px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .install-box ol {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .install-box li {
+            margin-bottom: 6px;
+        }
+
+        .install-box code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan);
+        }
+
+        /* Themed Footer */
+        footer {
+            margin-top: 65px;
+            padding-bottom: 40px;
+        }
+
+        .footer-card {
+            background: #090e18;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px;
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .footer-brand i {
+            color: var(--cyan);
+        }
+
+        .footer-author {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-author strong {
+            color: var(--cyan);
+        }
+
+        /* Discord Support Button */
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            background: rgba(88, 101, 242, 0.15);
+            border: 1px solid rgba(88, 101, 242, 0.45);
+            padding: 8px 22px;
+            border-radius: 999px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .discord-btn:hover {
+            background: rgba(88, 101, 242, 0.35);
+            border-color: #5865F2;
+        }
+
+        .discord-btn i {
+            color: #5865F2;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lightweight Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Navigation -->
+    <nav>
+        <div class="container nav-inner">
+            <a href="#" class="brand">
+                <i class="fa-solid fa-gem"></i>
+                <span>DIAMOND MENU</span>
+            </a>
+            <!-- HZG Server Nav Link -->
+            <a href="https://www.hzgaming.net/" target="_blank" class="hzg-nav-badge" title="Visit Horizon Gaming Official Website">
+                <span class="hzg-logo-mini">HZG</span>
+                <span class="hzg-nav-info"><span class="pulse-dot"></span> samp.hzgaming.net</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Diamond Menu <span>v1.0.0.3</span></h1>
+            <p>
+                A clean MoonLoader automation menu created for Horizon Roleplay.
+            </p>
+
+            <!-- Download Button -->
+            <div class="download-wrapper">
+                <button type="button" class="btn-download" id="downloadBtn" onclick="downloadMod()">
+                    <i class="fa-solid fa-download"></i> Download Diamond Menu
+                </button>
+            </div>
+        </section>
+
+        <!-- Menu Features List -->
+        <section class="section-features">
+            <h2 class="section-title"><i class="fa-solid fa-table-cells-large"></i> Menu Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>AutoVester</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    <span>AutoFind</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-flag"></i>
+                    <span>AutoCap</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-location-arrow"></i>
+                    <span>Backup</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-gun"></i>
+                    <span>Weapons</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>Defense</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-wrench"></i>
+                    <span>Auto-Accept-Repair</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-car"></i>
+                    <span>Vehicle Storage</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Peds</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <span>Custom Keybinds</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>EasyCall</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Guide -->
+        <section class="section-install">
+            <h2 class="section-title"><i class="fa-solid fa-wrench"></i> How to install</h2>
+            <div class="install-box">
+                <p><strong>Requirements:</strong> GTA SA 1.0 US, MoonLoader 0.26+, SAMPFUNCS, ImGui, and <code>samp.events</code>.</p>
+                <ol>
+                    <li>Click the download button above to download the file.</li>
+                    <li>Place <code>DiamondMenu.lua</code> into your <code>GTA San Andreas\moonloader\</code> folder.</li>
+                    <li>Connect to HZG (<code>samp.hzgaming.net:7777</code>) and type <code>/diamondmenu</code>.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Themed Footer -->
+        <footer>
+            <div class="footer-card">
+                <div class="footer-brand">
+                    <i class="fa-solid fa-gem"></i>
+                    <span>DIAMOND MENU</span>
+                </div>
+                <p class="footer-author">Created by <strong>Tony Donalds</strong></p>
+                <div>
+                    <!-- Verified Direct Discord Profile Link -->
+                    <a href="https://discord.com/users/1101473312686751864" target="_blank" class="discord-btn" title="Contact Support on Discord">
+                        <i class="fa-brands fa-discord"></i>
+                        <span>Support</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Download & Canvas Scripts -->
+    <script>
+        let hasDownloaded = false;
+
+        // Download handler: locks button, turns it grey, and sets text to "Downloaded" permanently until page reload
+        async function downloadMod() {
+            if (hasDownloaded) return;
+            hasDownloaded = true;
+
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded';
+
+            const fileUrl = 'https://raw.githubusercontent.com/Tony-HZG/DiamondMenu/main/DiamondMenu.lua';
+            
+            try {
+                const res = await fetch(fileUrl);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'DiamondMenu.lua';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+            } catch (e) {
+                // Browser fallback
+                const a = document.createElement('a');
+                a.href = fileUrl;
+                a.download = 'DiamondMenu.lua';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        // Optimized Background Script
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 120 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class DiamondParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.2 + 1.2;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y - this.size);
+                ctx.lineTo(this.x + this.size, this.y);
+                ctx.lineTo(this.x, this.y + this.size);
+                ctx.lineTo(this.x - this.size, this.y);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                if (mouse.x !== null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= (dx / dist) * force * 2.5;
+                        this.y -= (dy / dist) * force * 2.5;
+                    }
+                }
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 22000), 50);
+            for (let i = 0; i < count; i++) {
+                particles.push(new DiamondParticle());
+            }
+        }
+
+        function connectParticles() {
+            ctx.lineWidth = 0.7;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        let opacity = (1 - dist / 100) * 0.18;
+                        ctx.strokeStyle = `rgba(0, 200, 255, ${opacity})`;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 200, 255, 0.4)';
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        resizeCanvas();
+        animate();
+    </script>
+</body>
+</html>
